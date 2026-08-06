@@ -2,7 +2,8 @@ name: Build and Push Container
 
 on:
   push:
-    branches: [ "main", "master", "develop" ]
+    branches: [ "main", "master" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -14,6 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: 'v1.0.10' # Targets a stable release tag instead of bleeding-edge develop
 
       - name: Log in to the Container registry
         uses: docker/login-action@v3
@@ -28,3 +31,5 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/biglogano/scholarsome:latest
+          build-args: |
+            NODE_OPTIONS=--max-old-space-size=4096
